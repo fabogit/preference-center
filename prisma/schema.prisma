@@ -13,6 +13,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ConsentType {
+  email_notifications
+  sms_notifications
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -22,9 +27,19 @@ model User {
 }
 
 model Event {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  consents  Json
-  createdAt DateTime @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  consents  Consent[]
+  createdAt DateTime  @default(now())
+
+  @@index([userId]) // Index for faster lookups
+}
+
+model Consent {
+  id      String      @id @default(uuid())
+  type    ConsentType
+  enabled Boolean
+  eventId String
+  event   Event       @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,10 +20,29 @@ export class UsersService {
     }
   }
 
-  async getAllUsers() {
-    return this.prisma.user.findMany({
-      include: { events: true },
+  async getAllUsers(paginationDto: PaginationDto) {
+    const { page, limit } = paginationDto;
+
+    // Get the total count of users
+    const totalUsers = await this.prisma.user.count();
+
+    // Calculate total pages
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    // Fetch the users based on pagination
+    const users = await this.prisma.user.findMany({
+      skip: (page - 1) * limit, // Skip the users based on the current page
+      take: limit, // Limit the number of users per page
+      include: { events: true }, // Include events (if needed)
     });
+
+    return {
+      totalUsers, // Total number of users in the database
+      totalPages, // Total number of pages
+      page, // Current page
+      limit, // Number of users per page
+      users, // Paginated list of users
+    };
   }
 
   async deleteUser(id: string) {
