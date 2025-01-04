@@ -7,6 +7,12 @@ import { PaginationDto } from 'src/dto/pagination.dto';
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
+  /**
+   * Creates a new user with the specified email.
+   * @param {string} email - The email of the user to be created.
+   * @returns The created user object.
+   * @throws {ConflictException} If the email already exists in the database.
+   */
   async createUser(email: string) {
     try {
       return await this.prisma.user.create({
@@ -20,6 +26,11 @@ export class UsersService {
     }
   }
 
+  /**
+   * Retrieves a paginated list of all users.
+   * @param {PaginationDto} paginationDto - DTO containing the pagination parameters.
+   * @returns An object containing total users, total pages, and the list of users.
+   */
   async getAllUsers(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
 
@@ -45,6 +56,12 @@ export class UsersService {
     };
   }
 
+  /**
+   * Deletes a user by their ID.
+   * @param {string} id - The ID of the user to delete.
+   * @returns The deleted user object.
+   * @throws {NotFoundException} If the user does not exist.
+   */
   async deleteUser(id: string) {
     try {
       return await this.prisma.user.delete({
