@@ -38,7 +38,7 @@ async function bootstrap() {
 
   logger.log('Configuring Swagger documentation...');
   const config = new DocumentBuilder()
-    .setTitle('Preference Center API')
+    .setTitle('Preference Center - API')
     .setDescription('API for managing users and consents')
     .setVersion('1.0')
     .build();

@@ -2,16 +2,18 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
+  IsEnum,
   IsNotEmpty,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ConsentType } from '@prisma/client';
 
-class ConsentDto {
-  @ApiProperty({ description: 'Consent ID', example: 'email_notifications' })
-  @IsString()
-  id: string;
+export class ConsentDto {
+  @ApiProperty({ description: 'Consent type', example: 'email_notifications' })
+  @IsEnum(ConsentType) // Validate against the `ConsentType` enum
+  id: ConsentType;
 
   @ApiProperty({ description: 'Whether consent is enabled', example: true })
   @IsBoolean()
