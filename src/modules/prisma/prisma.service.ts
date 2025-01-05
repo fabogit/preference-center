@@ -1,18 +1,25 @@
 import {
   Injectable,
+  Logger,
   OnModuleInit,
   OnModuleDestroy,
-  OnApplicationShutdown,
-  ShutdownSignal,
-  Logger,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
+/**
+ * Service for managing the Prisma Client, including database connections and query monitoring.
+ * Extends PrismaClient to integrate lifecycle hooks for connection management.
+ */
 @Injectable()
 export class PrismaService
   extends PrismaClient
-  implements OnModuleInit, OnModuleDestroy, OnApplicationShutdown
+  implements OnModuleInit, OnModuleDestroy
 {
+  private readonly logger = new Logger(PrismaService.name, { timestamp: true });
+
+  /**
+   * Constructs the PrismaService and sets up middleware for query performance logging.
+   */
   constructor() {
     super();
     this.$use(async (params, next) => {
@@ -26,8 +33,10 @@ export class PrismaService
     });
   }
 
-  private readonly logger = new Logger(PrismaService.name, { timestamp: true });
-
+  /**
+   * Lifecycle hook that is called when the module is initialized.
+   * Establishes the database connection.
+   */
   async onModuleInit() {
     try {
       this.logger.log('Connecting to the database...');
@@ -35,21 +44,26 @@ export class PrismaService
       this.logger.log('Database connection established.');
     } catch (error) {
       this.logger.error('Failed to connect to the database:', error.stack);
-      throw error; // Re-throw the error so it propagates properly
+      throw error;
     }
   }
 
+  /**
+   * Lifecycle hook that is called when the module is destroyed.
+   * Ensures the database connection is properly closed.
+   */
   async onModuleDestroy() {
-    this.logger.log('Disconnecting from the database...');
+    this.logger.warn('Disconnecting from the database...');
     await this.$disconnect();
-    this.logger.log('Database connection closed.');
+    this.logger.warn('Database connection closed.');
   }
 
-  async onApplicationShutdown(signal?: ShutdownSignal) {
-    this.logger.log(`Application shutdown triggered by signal: ${signal}`);
-    this.logger.log(
-      'Disconnecting from the database (application shutdown)...',
-    );
+  /**
+   * Explicitly disconnects the Prisma Client from the database.
+   * Can be used independently when manual disconnection is needed.
+   */
+  async disconnect() {
+    this.logger.warn('Disconnecting from the database...');
     await this.$disconnect();
     this.logger.log('Database connection closed.');
   }

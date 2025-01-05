@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
-import { ApiTags, ApiBody, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { CreateEventDto } from '../../dto/event.dto';
 import { PaginationDto } from 'src/dto/pagination.dto';
@@ -31,16 +31,5 @@ export class EventsController {
   async createEvent(@Body() createEventDto: CreateEventDto) {
     const { userId, consents } = createEventDto;
     return this.eventsService.createEvent(userId, consents);
-  }
-
-  /**
-   * Retrieves the latest consent state for a given user ID.
-   * @param {string} id - The user ID to fetch consent state for.
-   * @returns The latest state of consents for the user.
-   */
-  @Get('consent/:userId')
-  @ApiParam({ name: 'userId', description: 'ID of the user' })
-  async getConsentStatus(@Param('userId') userId: string) {
-    return this.eventsService.getUserConsentStatus(userId);
   }
 }
