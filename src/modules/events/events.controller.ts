@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Get, Query, Param } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { EventsService } from './events.service';
-import { CreateEventDto } from '../../dto/create-event.dto';
+import { CreateEventDto } from '../../dto/event.dto';
 import { PaginationDto } from 'src/dto/pagination.dto';
 
 @ApiTags('Events')

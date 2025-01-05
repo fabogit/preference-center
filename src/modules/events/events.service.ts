@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PaginationDto } from 'src/dto/pagination.dto';
+import { ConsentDto } from 'src/dto/event.dto';
 import { ConsentType } from '@prisma/client';
 
 @Injectable()
@@ -18,12 +19,12 @@ export class EventsService {
    * @returns An object containing total events, total pages, and the list of events.
    */
   async getAllEvents(paginationDto: PaginationDto) {
-    const { page, limit } = paginationDto;
     try {
+      const { page, limit } = paginationDto;
       // Calculate total events and pages
+
       const totalEvents = await this.prisma.event.count();
       const totalPages = Math.ceil(totalEvents / limit);
-      // Fetch the events based on pagination
 
       const events = await this.prisma.event.findMany({
         skip: (page - 1) * limit, // Skip the events based on the current page
@@ -39,7 +40,7 @@ export class EventsService {
       };
     } catch (error) {
       throw new InternalServerErrorException(
-        `Failed to fetch events for page ${page} with limit ${limit}`,
+        `Failed to fetch events for page ${paginationDto.page} with limit ${paginationDto.limit}`,
         error.message,
       );
     }
@@ -51,11 +52,7 @@ export class EventsService {
    * @param {ConsentDto[]} consents - Array of consents.
    * @returns The created event.
    */
-  async createEvent(
-    userId: string,
-    // TODO validate uing dto
-    consents: { id: string; enabled: boolean }[],
-  ) {
+  async createEvent(userId: string, consents: ConsentDto[]) {
     try {
       // Check if the user exists
       const userExists = await this.prisma.user.findUnique({
@@ -66,7 +63,7 @@ export class EventsService {
         throw new NotFoundException(`User with ID ${userId} does not exist`);
       }
 
-      // Validate and map consents
+      // Map and validate consents
       const consentData = consents.map((consent) => {
         if (!Object.values(ConsentType).includes(consent.id as ConsentType)) {
           throw new BadRequestException(

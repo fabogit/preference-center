@@ -8,7 +8,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from '../../dto/create-user.dto';
+import { CreateUserDto } from '../../dto/user.dto';
 import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { PaginationDto } from 'src/dto/pagination.dto';
 
