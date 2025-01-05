@@ -5,7 +5,7 @@ import { ConsentType } from '@prisma/client';
 export class ConsentDto {
   @ApiProperty({ description: 'Consent type', example: 'email_notifications' })
   @IsEnum(ConsentType) // Validate against the `ConsentType` enum
-  id: ConsentType;
+  type: ConsentType;
 
   @ApiProperty({ description: 'Whether consent is enabled', example: true })
   @IsBoolean()

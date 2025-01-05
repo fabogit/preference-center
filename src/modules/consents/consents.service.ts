@@ -19,11 +19,9 @@ export class ConsentsService {
    * This includes the `enabled` state of each consent type (email/sms notifications).
    *
    * @param userId The ID of the user whose consents are to be fetched.
-   * @returns A record with the most recent consent values for each type.
+   * @returns An array of the most recent consent values for each type.
    */
-  async getLatestConsentsForUser(
-    userId: string,
-  ): Promise<Record<ConsentType, ConsentDto>> {
+  async getLatestConsentsForUser(userId: string): Promise<ConsentDto[]> {
     try {
       // Fetch events and consents for the user from the database
       const userConsents = await this.prisma.user.findUnique({
@@ -42,14 +40,15 @@ export class ConsentsService {
         },
       });
 
-      // If no events exist for the user, return an empty consent record
+      // If no events exist for the user, return an empty array
       if (!userConsents?.events?.length) {
         this.logger.warn(`No events found for user with ID: ${userId}`);
-        return this.initializeLatestConsents();
+        return [];
       }
 
       // Create a container to hold the most recent consent for each type
-      const latestConsents = this.initializeLatestConsents();
+      const latestConsents: Record<ConsentType, ConsentDto> =
+        this.initializeLatestConsents();
 
       // Loop through all events and their consents to update the latest values
       userConsents.events.forEach((event) => {
@@ -60,16 +59,15 @@ export class ConsentsService {
             latestConsents[consent.type].enabled !== consent.enabled
           ) {
             latestConsents[consent.type] = {
-              id: consent.type,
+              type: consent.type,
               enabled: consent.enabled,
             };
-            // this.logger.log(
-            //   `Updated consent for type: ${consent.type}, enabled: ${consent.enabled}`,
-            // );
           }
         });
       });
-      return latestConsents;
+
+      // Return the consentsarray
+      return Object.values(latestConsents);
     } catch (error) {
       this.logger.error(
         `Error fetching consents for user with ID: ${userId}`,
@@ -88,10 +86,7 @@ export class ConsentsService {
     ConsentType,
     ConsentDto | undefined
   > {
-    const consentTypes: ConsentType[] = [
-      'email_notifications',
-      'sms_notifications',
-    ];
+    const consentTypes = Object.values(ConsentType); // Get all values from the ConsentType enum
     return consentTypes.reduce(
       (acc, type) => {
         acc[type] = undefined; // Initialize with undefined for each consent type

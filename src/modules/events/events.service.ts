@@ -65,16 +65,16 @@ export class EventsService {
 
       // Map and validate consents
       const consentData = consents.map((consent) => {
-        if (!Object.values(ConsentType).includes(consent.id as ConsentType)) {
+        if (!Object.values(ConsentType).includes(consent.type as ConsentType)) {
           throw new BadRequestException(
-            `Invalid consent type: ${consent.id}. Expected one of: ${Object.values(
+            `Invalid consent type: ${consent.type}. Expected one of: ${Object.values(
               ConsentType,
             ).join(', ')}`,
           );
         }
 
         return {
-          type: consent.id as ConsentType, // Ensure it matches the enum
+          type: consent.type as ConsentType, // Ensure it matches the enum
           enabled: consent.enabled,
         };
       });

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -10,4 +10,13 @@ export class CreateUserDto {
   @IsEmail()
   @IsNotEmpty()
   email: string;
+}
+
+/**
+ * DTO to validate userId in the URL parameter.
+ */
+export class UserIdDto {
+  @IsString()
+  @IsUUID() // If userId is expected to be a UUID
+  userId: string;
 }
