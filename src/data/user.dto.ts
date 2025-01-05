@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsDate, IsEmail, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
-export class CreateUserDto {
+export class userEmailDto {
   @ApiProperty({
     description: 'User email address',
     example: 'user@example.com',
@@ -17,6 +18,22 @@ export class CreateUserDto {
  */
 export class UserIdDto {
   @IsString()
-  @IsUUID() // If userId is expected to be a UUID
-  userId: string;
+  @IsUUID()
+  id: string;
+}
+
+export class ResCDUserDto {
+  @IsUUID()
+  id: string;
+
+  @IsEmail()
+  email: string;
+
+  @IsDate()
+  @Type(() => Date)
+  createdAt: Date;
+
+  @IsDate()
+  @Type(() => Date)
+  updatedAt: Date;
 }

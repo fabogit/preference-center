@@ -22,3 +22,9 @@ export class CreateEventDto {
   @Type(() => ConsentDto)
   consents: ConsentDto[];
 }
+
+export class EventDto {
+  id: string;
+  userId: string;
+  createdAt: string;
+}
