@@ -5,8 +5,8 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { PaginationDto } from 'src/dto/pagination.dto';
-import { ConsentDto } from 'src/dto/event.dto';
+import { PaginationDto } from 'src/data/pagination.dto';
+import { ConsentDto } from 'src/data/consent.dto';
 import { ConsentType } from '@prisma/client';
 
 @Injectable()

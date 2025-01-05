@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { PaginationDto } from 'src/data/pagination.dto';
 
 @Injectable()
 export class UsersService {

@@ -8,9 +8,9 @@ import {
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from '../../dto/user.dto';
+import { CreateUserDto } from '../../data/user.dto';
 import { ApiTags, ApiBody, ApiQuery } from '@nestjs/swagger';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { PaginationDto } from 'src/data/pagination.dto';
 
 @ApiTags('Users')
 @Controller('users')

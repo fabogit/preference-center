@@ -22,6 +22,10 @@ export class PrismaService
    */
   constructor() {
     super();
+    // this.$extends({
+    //   client: {},
+    // });
+    // TODO deprecated
     this.$use(async (params, next) => {
       const before = Date.now();
       const result = await next(params);
